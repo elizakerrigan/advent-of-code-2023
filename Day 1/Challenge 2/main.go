@@ -36,12 +36,18 @@ func main() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		matches := digitRegex.FindAllString(line, -1)
+
+		var value int
 		if len(matches) >= 2 {
-			first, last := matches[0], matches[len(matches)-1]
-			firstDigit, lastDigit := convertToDigit(first), convertToDigit(last)
-			value, _ := strconv.Atoi(fmt.Sprintf("%d%d", firstDigit, lastDigit))
-			sum += value
+			// Use the first and last match to form a two-digit number
+			firstDigit, lastDigit := convertToDigit(matches[0]), convertToDigit(matches[len(matches)-1])
+			value, _ = strconv.Atoi(fmt.Sprintf("%d%d", firstDigit, lastDigit))
+		} else if len(matches) == 1 {
+			// If there's only one match, use it directly
+			value = convertToDigit(matches[0])
 		}
+
+		sum += value
 	}
 
 	if err := scanner.Err(); err != nil {
